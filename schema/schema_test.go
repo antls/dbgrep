@@ -54,7 +54,7 @@ func TestIdColumns(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := NewMysql(db)
-	actualColumns, err := s.IdColumns(tableName)
+	actualColumns, err := s.IDColumns(tableName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +75,7 @@ func TestMultipleIdColumns(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := NewMysql(db)
-	actualColumns, err := s.IdColumns(tableName)
+	actualColumns, err := s.IDColumns(tableName)
 	if err != nil {
 		t.Fatal(err)
 	}

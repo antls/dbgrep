@@ -6,6 +6,7 @@ import (
 	"github.com/antls/dbgrep/schema"
 )
 
+// Result is a result of search in specified table
 type Result struct {
 	Table   string
 	Columns []string
@@ -13,18 +14,20 @@ type Result struct {
 	Err     error
 }
 
+// Row is a db row which contains search pattern
 type Row []string
 
+// Find performs search of pattern in database
 func Find(db *sql.DB, pattern string) []Result {
 	s := schema.NewMysql(db)
-	results := make([]Result, 0)
+	var results []Result
 	tables, err := s.Tables()
 	if err != nil {
 		results = append(results, Result{Err: err})
 		return results
 	}
 	for _, table := range tables {
-		resultRows := make([]Row, 0)
+		var resultRows []Row
 		columns, err := s.TextColumns(table)
 		if err != nil {
 			results = append(results, Result{Table: table, Err: err})
@@ -57,7 +60,7 @@ func searchInColumn(db *sql.DB, table, column, pattern string) ([]Row, error) {
 	if err != nil {
 		return nil, err
 	}
-	resultRows := make([]Row, 0)
+	var resultRows []Row
 	for rows.Next() {
 		row, err := loadRow(rows, len(resultColumns))
 		if err != nil {

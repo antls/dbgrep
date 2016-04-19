@@ -2,21 +2,24 @@ package schema
 
 import "database/sql"
 
+// Schema allows to get database meta data
 type Schema interface {
 	Tables() ([]string, error)
-	IdColumns(table string) ([]string, error)
+	IDColumns(table string) ([]string, error)
 	TextColumns(table string) ([]string, error)
 }
 
-type Mysql struct {
+type mysql struct {
 	db *sql.DB
 }
 
+// NewMysql creates schema for mysql database
 func NewMysql(db *sql.DB) Schema {
-	return &Mysql{db}
+	return &mysql{db}
 }
 
-func (s *Mysql) Tables() (tables []string, err error) {
+// Tables returns all tables in database
+func (s *mysql) Tables() (tables []string, err error) {
 	rows, err := s.db.Query("SHOW TABLES")
 	if err != nil {
 		return
@@ -35,11 +38,13 @@ func (s *Mysql) Tables() (tables []string, err error) {
 	return
 }
 
-func (s *Mysql) IdColumns(table string) (columns []string, err error) {
+// IDColumns returns primary key columns in the table
+func (s *mysql) IDColumns(table string) (columns []string, err error) {
 	return s.columns(table, "`Key` = 'PRI'")
 }
 
-func (s *Mysql) TextColumns(table string) ([]string, error) {
+// TextColumns returns text columns in the table
+func (s *mysql) TextColumns(table string) ([]string, error) {
 	cond := "Type LIKE '%char%' OR " +
 		"Type LIKE '%binary%' OR " +
 		"Type LIKE '%blob%' OR " +
@@ -49,7 +54,7 @@ func (s *Mysql) TextColumns(table string) ([]string, error) {
 	return s.columns(table, cond)
 }
 
-func (s *Mysql) columns(table string, condition string) (columns []string, err error) {
+func (s *mysql) columns(table string, condition string) (columns []string, err error) {
 	rows, err := s.db.Query("SHOW COLUMNS FROM " + table + " WHERE " + condition)
 	if err != nil {
 		return
