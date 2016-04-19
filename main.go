@@ -1,14 +1,10 @@
 package main
 
 import (
-	"flag"
-
-	"fmt"
-
-	"os"
-
 	"database/sql"
-
+	"flag"
+	"fmt"
+	"os"
 	"strings"
 
 	"github.com/antls/dbgrep/finder"
@@ -61,6 +57,6 @@ func run(dsn string, pattern string) error {
 }
 
 func printHelp() {
-	fmt.Fprintln(os.Stderr, "dbgrep [-login=<login>] [-host=<host>] pattern database")
+	fmt.Fprintln(os.Stderr, "PASSWORD=\"<password>\" dbgrep [-login=<login>] [-host=<host>] pattern database")
 	flag.PrintDefaults()
 }
